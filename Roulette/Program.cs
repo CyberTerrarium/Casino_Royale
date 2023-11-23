@@ -1,5 +1,16 @@
 ﻿using System.Collections.ObjectModel;
 
+void ShowRules()
+{
+    Console.WriteLine("\nДобро пожаловать в игру \"Рулетка\"!\nПожалуйста, ознакомьтес с правилами игры:");
+    Console.WriteLine("Вы можете поставить как отдельную ставку на выбранное вами число или цвет, так и одновременно и на число, и на цвет");
+    Console.WriteLine("Если сыграла ставка на число - ваша ставка умножается на 36, если на цвет - ставка умножается на 2");
+    Console.WriteLine("При одновременной ставке на число и цвет, коэффициент при победе рассчитывается отдельно для ставки на число и цвет");
+    Console.WriteLine("Присаживайтесь поудобнее. И да начнется игра! И пусть удача будет на вашей стороне!\n");
+    Console.WriteLine("Нажмите любую клавишу для продолжения");
+    Console.ReadLine();
+}
+
 int[,] CreateRulette()
 {
     int[,] rulette = new int[2, 37];
@@ -54,73 +65,164 @@ void PrintResult(int[] result)
     {
         color = "Zero";
     }
-    System.Console.WriteLine($"Выпало число {result[0]} {color}");
+    System.Console.WriteLine($"\nВыпало число {result[0]} {color}");
 }
 
-int isWinner(int usernum, int[] result)
+int[] isWinner(int[] usernum, int[] result)
 {
-    if (usernum == result[0])
+    int[] win = new int[2];
+    win[0] = -1;
+    win[1] = -1;
+
+    if (usernum[2] == result[0])
     {
-        System.Console.WriteLine("winner winner chicken dinner!");
-        return 36;
+        System.Console.WriteLine("Ставка на число сыграла!");
+        win[0] = 36;
     }
-    else if (usernum - 36 == result[1])
+    else if (usernum[3] == result[1])
     {
         System.Console.WriteLine("Ставка на цвет сыграла!");
-        return 2;
+        win[1] = 2;
     }
     else
     {
         System.Console.WriteLine("Ваша ставка не сыграла!Ставка уходит казино!");
-        return -1;
     }
+    return win;
 }
 
-int updateCredit(int isWinner, int stavka, int userCredit)
+int updateCredit(int[] isWinner, int stavkaNumber, int stavkaColor, int userCredit)
 {
-    int result = userCredit + stavka * isWinner;
-    System.Console.WriteLine(stavka * isWinner);
-    System.Console.WriteLine($"Ваш текущий депозит {result}");
+    int result = userCredit + stavkaNumber * isWinner[0] + stavkaColor * isWinner[1];
+    System.Console.WriteLine(stavkaNumber * isWinner[0] + stavkaColor * isWinner[1]);
+    System.Console.WriteLine($"\nВаш текущий депозит {result}");
     return result;
+}
+
+void printIncorrectChoise()
+{
+    Console.WriteLine("Выбор некорректен");
+}
+
+int betOnNumber()
+{
+    int numberBet = 0;
+    while (numberBet < 1 || numberBet > 36)
+    {
+        System.Console.WriteLine("Поставьте на число от 1 до 36!");
+        numberBet = Convert.ToInt32(System.Console.ReadLine());
+        if (numberBet < 1 || numberBet > 36) printIncorrectChoise();
+    }
+    return numberBet;
+}
+
+int betOnColor()
+{
+    int colorBet = 0;
+    while (colorBet < 1 || colorBet > 2)
+    {
+        System.Console.WriteLine("Введите 1, чтобы поставить на красное.");
+        System.Console.WriteLine("Введите 2, чтобы поставить на черное.");
+        colorBet = Convert.ToInt32(System.Console.ReadLine());
+        if (colorBet < 1 || colorBet > 2) printIncorrectChoise();
+    }
+    return colorBet;
+}
+
+int BetMoney()
+{
+    int bet = 0;
+    while (bet < 50)
+    {
+        System.Console.WriteLine("Введите вашу ставку. Минимальная ставка 50.");
+        bet = Convert.ToInt32(Console.ReadLine());
+        if (bet < 50) printIncorrectChoise();
+    }
+    return bet;
 }
 
 int[] makeBet()
 {
     int userChoice = 0;
-    int userBet = 0;
-    int bet = 0;
-    int[] result = new int[2];
+    int userBetNumber = 0;
+    int userBetColor = 0;
+    int betMoneyColor = 0;
+    int betMoneyNumber = 0;
+    int[] result = new int[4]; // result[0]-ставка на число, result[1]-ставка на цвет
 
-    while (bet < 50)
+    while (userChoice < 1 || userChoice > 3)
     {
-        System.Console.WriteLine("Введите вашу ставку. Минимальная ставка 50.");
-        bet = Convert.ToInt32(Console.ReadLine());
-    }
-    while (userChoice < 1 || userChoice > 2)
-    {
-        System.Console.WriteLine($"Нажмите 1, если хотите поставить на число!");
-        System.Console.WriteLine($"Нажмите 2, если хотите поставить на цвет!");
+        System.Console.WriteLine("Нажмите 1, если хотите поставить на число!");
+        System.Console.WriteLine("Нажмите 2, если хотите поставить на цвет!");
+        System.Console.WriteLine("Нажмите 3, если хотите поставить на число и на цвет!");
         userChoice = Convert.ToInt32(Console.ReadLine());
+        if (userChoice < 1 || userChoice > 3) printIncorrectChoise();
     }
     if (userChoice == 1)
     {
-        while (userBet < 1 || userBet > 36)
-        {
-            System.Console.WriteLine("Поставьте на число от 1 до 36!");
-            userBet = Convert.ToInt32(System.Console.ReadLine());
-        }
+        userBetNumber = betOnNumber();
+        betMoneyNumber = BetMoney();
     }
+    // {
+    //     while (userBetNumber < 1 || userBetNumber > 36)
+    //     {
+    //         System.Console.WriteLine("Поставьте на число от 1 до 36!");
+    //         userBetNumber = Convert.ToInt32(System.Console.ReadLine());
+    //         while (betMoneyNumber < 50)
+    //         {
+    //             System.Console.WriteLine("Введите вашу ставку. Минимальная ставка 50.");
+    //             betMoneyNumber = Convert.ToInt32(Console.ReadLine());
+    //         }
+    //     }
+    // }
     else if (userChoice == 2)
     {
-        while (userBet < 1 || userBet > 2)
-        {
-            System.Console.WriteLine("Введите 1, чтобы поставить на красное.");
-            System.Console.WriteLine("Введите 2, чтобы поставить на черное.");
-            userBet = Convert.ToInt32(System.Console.ReadLine());
-        }
+        userBetColor = betOnColor();
+        betMoneyColor = BetMoney();
+        // while (userBetColor < 1 || userBetColor > 2)
+        // {
+        //     System.Console.WriteLine("Введите 1, чтобы поставить на красное.");
+        //     System.Console.WriteLine("Введите 2, чтобы поставить на черное.");
+        //     userBetColor = Convert.ToInt32(System.Console.ReadLine());
+        //     while (betMoneyColor < 50)
+        //     {
+        //         System.Console.WriteLine("Введите вашу ставку. Минимальная ставка 50.");
+        //         betMoneyColor = Convert.ToInt32(Console.ReadLine());
+        //     }
+        // }
     }
-    result[0] = userBet;
-    result[1] = bet;
+    else if (userChoice == 3)
+    {
+        userBetNumber = betOnNumber();
+        betMoneyNumber = BetMoney();
+        userBetColor = betOnColor();
+        betMoneyColor = BetMoney();
+        // System.Console.WriteLine("Выберите число для ставки: ");
+        // while (userBetNumber < 1 || userBetNumber > 36)
+        // {
+        //     userBetNumber = Convert.ToInt32(System.Console.ReadLine());
+        //     while (betMoneyNumber < 50)
+        //     {
+        //         System.Console.WriteLine("Введите вашу ставку. Минимальная ставка 50.");
+        //         betMoneyNumber = Convert.ToInt32(Console.ReadLine());
+        //     }
+        // }
+        // System.Console.WriteLine("Выберите цвет: 1 - красное, 2 - черное!");
+        // while (userBetColor < 1 || userBetColor > 2)
+        // {
+        //     userBetColor = Convert.ToInt32(System.Console.ReadLine());
+        //     while (betMoneyColor < 50)
+        //     {
+        //         System.Console.WriteLine("Введите вашу ставку. Минимальная ставка 50.");
+        //         betMoneyColor = Convert.ToInt32(Console.ReadLine());
+        //     }
+        // }
+
+    }
+    result[0] = betMoneyNumber;
+    result[1] = betMoneyColor;
+    result[2] = userBetNumber;
+    result[3] = userBetColor;
     return result;
 }
 
@@ -128,7 +230,7 @@ bool checkBalance(int userDeposit)
 {
     if (userDeposit < 50)
     {
-        System.Console.WriteLine("Недостаточно средств. Пополните баланс!");
+        System.Console.WriteLine("\nМинимальная ставка 50. У вас недостаточно средств. Пополните баланс!");
         return false;
     }
     else
@@ -137,7 +239,8 @@ bool checkBalance(int userDeposit)
     }
 }
 int userDeposit = 1000;
-int[] userBet = new int[2];
+int[] userBet = new int[3];
+ShowRules();
 System.Console.WriteLine($"Ваш депозит {userDeposit}");
 while (checkBalance(userDeposit))
 {
@@ -145,7 +248,7 @@ while (checkBalance(userDeposit))
     int[,] rulette = CreateRulette();
     int[] resultGame = startgame(rulette);
     PrintResult(resultGame);
-    int koefficient = isWinner(userBet[0], resultGame);
-    userDeposit = updateCredit(koefficient, userBet[1], userDeposit);
+    int[] koefficient = isWinner(userBet, resultGame);
+    userDeposit = updateCredit(koefficient, userBet[0], userBet[1], userDeposit);
 }
-System.Console.WriteLine("Вы проиграли! АуфидерзейнЁ!");
+System.Console.WriteLine("\nВы проиграли! АуфидерзейнЁ!");
