@@ -92,10 +92,11 @@ public class Roulette
     /// <summary>
     /// Принимает нажатую клавишу и перемешает игрока по карте с не возможностью выйти за пределы карты
     /// </summary>
-    /// <param name="interfaceCharArray"></param>
-    /// <param name="userPositionX"></param>
-    /// <param name="userPositionY"></param>
-    /// <param name="charKey"></param>
+    /// <param name="interfaceCharArray">Карта интерфэйса</param>
+    /// <param name="userPositionX">позиция по x</param>
+    /// <param name="userPositionY">позиция по y</param>
+    /// <param name="charKey">какая клавиша нажата</param>
+    /// <param name="symbolOfMapBorders">Символ границы карты</param>
     public static void PlayerPositionManagement(ref char[,] interfaceCharArray, 
                                                 ref int userPositionX, ref int userPositionY, 
                                                 ref ConsoleKeyInfo charKey,
