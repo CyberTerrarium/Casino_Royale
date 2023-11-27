@@ -3,12 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using Microsoft.VisualBasic;
+using System.IO;
 
 public class Roulette
 {
     private const int numberOfOut = -999999;
 
+
+    private static int GetMaxLengthOfLine(string[] lines)
+    {
+        int maxLength = lines[0].Length;
+        foreach (var line in lines)
+            if (line.Length > maxLength)
+                maxLength = line.Length;
+        return maxLength;
+    }
 
     /// <summary>
     /// Читает файл txt в директори программы и конвертирует с многомерный массив чар
@@ -16,22 +27,25 @@ public class Roulette
     /// <returns>Возвращает многомерныймассив символов</returns>
     public static char[,] ReadFileTXTAndConvertToChar(string[] interfaceStringArray)
     {
+        char[,] interfaceCharArray = new char[GetMaxLengthOfLine(interfaceStringArray), interfaceStringArray.Length];
+        for (int x = 0; x < interfaceCharArray.GetLength(0); x++)
+            for (int y = 0; y < interfaceCharArray.GetLength(1); y++)
+                interfaceCharArray[x, y] = interfaceStringArray[y][x];
+               // string[] interfaceStringArray = File.ReadAllLines(@"RouletteInterface.txt");
+        // char[,] interfaceCharArray = new char[interfaceStringArray.Length, interfaceStringArray[0].ToString().Length];
 
-        // string[] interfaceStringArray = File.ReadAllLines(@"RouletteInterface.txt");
-        char[,] interfaceCharArray = new char[interfaceStringArray.Length, interfaceStringArray[0].ToString().Length];
-
-        int rowIndex = 0, columnIndex;
-        foreach (var name in interfaceStringArray)
-        {
-            columnIndex = 0;
-            char[] charName = name.ToCharArray();
-            for (int i = 0; i < charName.Length; i++)
-            {
-                interfaceCharArray[rowIndex, columnIndex] = charName[i];
-                columnIndex++;
-            }
-            rowIndex++;
-        }
+        // int rowIndex = 0, columnIndex;
+        // foreach (var name in interfaceStringArray)
+        // {
+        //     columnIndex = 0;
+        //     char[] charName = name.ToCharArray();
+        //     for (int i = 0; i < charName.Length; i++)
+        //     {
+        //         interfaceCharArray[rowIndex, columnIndex] = charName[i];
+        //         columnIndex++;
+        //     }
+        //     rowIndex++;
+        // }
         return interfaceCharArray;
     }
 
@@ -53,14 +67,9 @@ public class Roulette
         Console.ForegroundColor = newForegroundColor;
         Console.BackgroundColor = newBackgroundColor;
         System.Console.SetCursorPosition(coordinateX, coordinateY);
-        if (requiredNumber == numberOfOut)
-        {
-            System.Console.WriteLine($"{text}");
-        }
-        else
-        {
-            System.Console.WriteLine($"{text}{requiredNumber}");
-        }
+        if (requiredNumber == numberOfOut) System.Console.WriteLine($"{text}");
+        else System.Console.WriteLine($"{text}{requiredNumber}");
+
         Console.ForegroundColor = defautForegroundColor;
         Console.BackgroundColor = defautBackgroundColor;
     }
@@ -89,6 +98,29 @@ public class Roulette
         Console.BackgroundColor = defautBackgroundColor;
     }
 
+    public static void PrintFilePlayingField(char[,] interfaceCharArray,
+                                            int coordinateX = 0, int coordinateY = 0,
+                                            ConsoleColor newForegroundColor = ConsoleColor.White,
+                                            ConsoleColor newBackgroundColor = ConsoleColor.Black)
+    {
+        ConsoleColor defautForegroundColor = Console.ForegroundColor;
+        ConsoleColor defautBackgroundColor = Console.BackgroundColor;
+        Console.ForegroundColor = newForegroundColor;
+        Console.BackgroundColor = newBackgroundColor;
+        System.Console.SetCursorPosition(coordinateX, coordinateY);
+        for (int y = 0; y < interfaceCharArray.GetLength(1); y++)
+        {
+            for (int x = 0; x < interfaceCharArray.GetLength(0); x++)
+            {
+                System.Console.Write(interfaceCharArray[x,y]);
+            }
+            System.Console.Write("\n");
+        }
+        Console.ForegroundColor = defautForegroundColor;
+        Console.BackgroundColor = defautBackgroundColor;
+    }
+
+
     /// <summary>
     /// Принимает нажатую клавишу и перемешает игрока по карте с не возможностью выйти за пределы карты
     /// </summary>
@@ -97,10 +129,10 @@ public class Roulette
     /// <param name="userPositionY">позиция по y</param>
     /// <param name="charKey">какая клавиша нажата</param>
     /// <param name="symbolOfMapBorders">Символ границы карты</param>
-    public static void PlayerPositionManagement(ref char[,] interfaceCharArray, 
-                                                ref int userPositionX, ref int userPositionY, 
+    public static void PlayerPositionManagement(ref char[,] interfaceCharArray,
+                                                ref int userPositionX, ref int userPositionY,
                                                 ref ConsoleKeyInfo charKey,
-                                                char symbolOfMapBorders )
+                                                char symbolOfMapBorders)
     {
         switch (charKey.Key)
         {
@@ -153,10 +185,17 @@ public class Roulette
             PrintFilePlayingField(filePlayingField, 0, 0);
             PrintTextInPositionOnTerminal("@", userPositionY, userPositionX);
             ConsoleKeyInfo charKey = Console.ReadKey();
-            PlayerPositionManagement(ref interfaceCharArray, 
-                                        ref userPositionX, ref userPositionY, 
-                                        ref charKey,
-                                        '#');
+            if (charKey.Key != ConsoleKey.Enter)
+            {
+                PlayerPositionManagement(ref interfaceCharArray,
+                                            ref userPositionX, ref userPositionY,
+                                            ref charKey,
+                                            '#');
+            }
+            else
+            {
+
+            }
             charKeyOutGame = charKey;
             Console.Clear();
         }
