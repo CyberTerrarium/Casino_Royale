@@ -5,14 +5,22 @@ using System.Text;
 using System.Threading.Tasks;
 using static Roulette;
 
-int userDeposit = 0;
-int userBid = 0;
-Console.CursorVisible = false;
-// Console.WindowHeight = 50;
-// Console.WindowWidth = 70;
-Console.Clear();
-PrintFilePlayingField(File.ReadAllLines(@"PrintRoulette_v.1.txt"));
-PrintTextInPositionOnTerminal("Нажмите SPACE для старта или Escape для выхода", 0, 10);
-ConsoleKeyInfo charKeyOutGame = Console.ReadKey();
-Console.Clear();
-StartInterfaсeRoulette(File.ReadAllLines(@"RouletteInterface.txt"), charKeyOutGame, userDeposit, userBid);
+Main();
+
+static void Main()
+{
+    int userDeposit = 0;
+    int userBid = 0;
+    Console.CursorVisible = false;
+    // Console.WindowHeight = 15;
+    // Console.WindowWidth = 59;
+    Console.Clear();
+    PrintFilePlayingField(File.ReadAllLines(@"PrintRoulette_v.1.txt"),
+                            0, 0,
+                            ConsoleColor.Red);
+    PrintTextInPositionOnTerminal("Нажмите SPACE для старта или Escape для выхода", 
+                                    0, 7);
+    ConsoleKeyInfo charKeyInteractionWithGame = Console.ReadKey();
+    Console.Clear();
+    StartGameRoulette(File.ReadAllLines(@"RouletteInterface.txt"), charKeyInteractionWithGame);
+}
