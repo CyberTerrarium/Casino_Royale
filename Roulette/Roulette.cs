@@ -31,21 +31,6 @@ public class Roulette
         for (int x = 0; x < interfaceCharArray.GetLength(0); x++)
             for (int y = 0; y < interfaceCharArray.GetLength(1); y++)
                 interfaceCharArray[x, y] = interfaceStringArray[y][x];
-               // string[] interfaceStringArray = File.ReadAllLines(@"RouletteInterface.txt");
-        // char[,] interfaceCharArray = new char[interfaceStringArray.Length, interfaceStringArray[0].ToString().Length];
-
-        // int rowIndex = 0, columnIndex;
-        // foreach (var name in interfaceStringArray)
-        // {
-        //     columnIndex = 0;
-        //     char[] charName = name.ToCharArray();
-        //     for (int i = 0; i < charName.Length; i++)
-        //     {
-        //         interfaceCharArray[rowIndex, columnIndex] = charName[i];
-        //         columnIndex++;
-        //     }
-        //     rowIndex++;
-        // }
         return interfaceCharArray;
     }
 
@@ -136,25 +121,25 @@ public class Roulette
     {
         switch (charKey.Key)
         {
-            case ConsoleKey.UpArrow:
+            case ConsoleKey.LeftArrow:
                 if (interfaceCharArray[userPositionX - 1, userPositionY] != symbolOfMapBorders)
                 {
                     userPositionX--;
                 }
                 break;
-            case ConsoleKey.DownArrow:
+            case ConsoleKey.RightArrow:
                 if (interfaceCharArray[userPositionX + 1, userPositionY] != symbolOfMapBorders)
                 {
                     userPositionX++;
                 }
                 break;
-            case ConsoleKey.LeftArrow:
+            case ConsoleKey.UpArrow:
                 if (interfaceCharArray[userPositionX, userPositionY - 1] != symbolOfMapBorders)
                 {
                     userPositionY--;
                 }
                 break;
-            case ConsoleKey.RightArrow:
+            case ConsoleKey.DownArrow:
                 if (interfaceCharArray[userPositionX, userPositionY + 1] != symbolOfMapBorders)
                 {
                     userPositionY++;
@@ -175,15 +160,15 @@ public class Roulette
         int userDeposit = 100000;
         int userBid;
         // Какой-тоМетод(out параметр = userBid)   Тогда не надо инициализировать userBid
-        int userPositionX = 2, userPositionY = 2;
+        int userPositionX = 2, userPositionY = 3;
 
         char[,] interfaceCharArray = ReadFileTXTAndConvertToChar(filePlayingField);
         while (charKeyOutGame.Key != ConsoleKey.Escape)
         {
-            PrintTextInPositionOnTerminal("Ваш текущий депозит: ", interfaceCharArray.GetLength(1) + 2, 0, userDeposit);
-            PrintTextInPositionOnTerminal("Нажмите Escape для выхода из игры", 0, interfaceCharArray.GetLength(0) + 2);
+            PrintTextInPositionOnTerminal("Ваш текущий депозит: ", interfaceCharArray.GetLength(0) + 2, 0, userDeposit);
+            PrintTextInPositionOnTerminal("Нажмите Escape для выхода из игры", 0, interfaceCharArray.GetLength(1) + 2);
             PrintFilePlayingField(filePlayingField, 0, 0);
-            PrintTextInPositionOnTerminal("@", userPositionY, userPositionX);
+            PrintTextInPositionOnTerminal("@", userPositionX, userPositionY);
             ConsoleKeyInfo charKey = Console.ReadKey();
             if (charKey.Key != ConsoleKey.Enter)
             {
