@@ -1,3 +1,8 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.VisualBasic;
 
 public class Roulette
@@ -56,25 +61,36 @@ public class Roulette
     /// <param name="interfaceStringArray">Одномерный массив строк</param>
     /// <param name="coordinateX">Координата печати X, по умолчанию 0</param>
     /// <param name="coordinateY">Координата печати Y, по умолчанию 0</param>
-    public static void PrintFilePlayingField(string[] interfaceStringArray, int coordinateX = 0, int coordinateY = 0)
+    public static void PrintFilePlayingField(string[] interfaceStringArray,
+                                            int coordinateX = 0, int coordinateY = 0,
+                                            ConsoleColor newForegroundColor = ConsoleColor.White,
+                                            ConsoleColor newBackgroundColor = ConsoleColor.Black)
     {
+        ConsoleColor defautForegroundColor = Console.ForegroundColor;
+        ConsoleColor defautBackgroundColor = Console.BackgroundColor;
+        // Console.WindowHeight = 100;
+        // Console.WindowWidth = 100;
+        Console.ForegroundColor = newForegroundColor;
+        Console.BackgroundColor = newBackgroundColor;
+        // Console.Clear();
         System.Console.SetCursorPosition(coordinateX, coordinateY);
         for (int i = 0; i < interfaceStringArray.Length; i++)
         {
             System.Console.WriteLine(interfaceStringArray[i]);
         }
+        // Console.ForegroundColor =;
     }
 
     /// <summary>
     /// Выводит в консоль интерфейс
     /// </summary>
     /// <param name="interfaceCharArray">Принимает многомерный массив символов</param>
-    public static void PrintInterfaсeRoulette(string[] filePlayingField, int userDeposit, int userBid)
+    public static void StartInterfaсeRoulette(string[] filePlayingField, ConsoleKeyInfo charKeyOutGame, int userDeposit, int userBid)
     {
         char[,] interfaceCharArray = ReadFileTXTAndConvertToChar(filePlayingField);
         int userPositionX = 2, userPositionY = 2;
-        System.Console.WriteLine("Нажмите пробел для старта: ");
-        ConsoleKeyInfo charKeyOutGame = Console.ReadKey(); //Тут надо исправить
+        // PrintTextInPositionOnTerminal("Нажмите пробел для старта: ");
+        // ConsoleKeyInfo charKeyOutGame = Console.ReadKey(); //Тут надо исправить
         while (charKeyOutGame.Key != ConsoleKey.Escape)
         {
             PrintTextInPositionOnTerminal("Ваш текущий депозит: ", interfaceCharArray.GetLength(1) + 2, 0, userDeposit);
